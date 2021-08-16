@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat;
 
 import android.text.TextUtils;
 
-import com.ypx.imagepicker.BuildConfig;
 import com.ypx.imagepicker.ImagePicker;
 import com.ypx.imagepicker.R;
 
@@ -39,6 +38,9 @@ public class PPermissionUtils {
     }
 
     public static boolean hasStoragePermissions(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            return true;
+        }
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ImagePicker.REQ_STORAGE);
@@ -123,7 +125,7 @@ public class PPermissionUtils {
         try {
             Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
-            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            intent.putExtra("packageName", context.getPackageName());
             context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
