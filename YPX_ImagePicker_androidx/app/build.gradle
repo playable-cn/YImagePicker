@@ -6,8 +6,8 @@ android {
         applicationId "com.ypx.imagepickerdemo"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 20
-        versionName "3.2.0"
+        versionCode 22
+        versionName "3.2.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -37,6 +37,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
     implementation 'androidx.cardview:cardview:1.0.0'
-    //implementation 'com.ypx.yimagepicker:androidx:3.1.4'
+    //implementation 'com.github.playable-cn:androidx:3.2.2'
     implementation project(path: ':imagepicker')
 }
