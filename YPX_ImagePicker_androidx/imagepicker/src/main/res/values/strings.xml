@@ -20,7 +20,7 @@
     <string name="picker_str_bottom_choose">選択</string>
 
     <!--  folder item text -->
-    <string name="picker_str_folder_item_all">图片和视频</string>
+    <string name="picker_str_folder_item_all">写真とビデオ</string>
     <string name="picker_str_folder_item_video">すべてビデオ</string>
     <string name="picker_str_folder_item_image">すべて写真</string>
     <string name="picker_str_folder_image_unit">枚</string>
