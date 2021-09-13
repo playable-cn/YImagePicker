@@ -32,12 +32,17 @@ import java.io.OutputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
+import android.util.Log;
+
 /**
  * Time: 2019/7/17 14:16
  * Author:ypx
  * Description:文件工具类
  */
 public class PBitmapUtils {
+
+    private static final String TAG = "ImagePicker";
+
     /**
      * 根据相对路径获取图片宽高
      *
@@ -178,7 +183,7 @@ public class PBitmapUtils {
         String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
             if (Build.VERSION.SDK_INT >= 29) {
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
             } else {
                 contentValues.put(MediaStore.Images.Media.DATA, path);
             }
@@ -263,7 +268,7 @@ public class PBitmapUtils {
         String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
             if (Build.VERSION.SDK_INT >= 29) {
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
             } else {
                 contentValues.put(MediaStore.Images.Media.DATA, path);
             }

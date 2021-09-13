@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
+
 import com.ypx.imagepicker.bean.ImageItem;
 import com.ypx.imagepicker.bean.MimeType;
 import com.ypx.imagepicker.bean.PickerError;
@@ -23,9 +25,11 @@ import com.ypx.imagepicker.utils.PickerFileProvider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 public class CameraCompat {
 
+    private static final String TAG = "ImagePicker";
 
     /**
      * 兼容安卓10拍照.因为安卓Q禁止直接写入文件到系统DCIM文件下，所以拍照入参必须是私有目录路径
@@ -42,11 +46,13 @@ public class CameraCompat {
                                  final OnImagePickCompleteListener listener) {
         final String path = PBitmapUtils.getPickerFileDirectory(activity).getAbsolutePath() +
                 File.separator + imageName + ".jpg";
+        Log.d(TAG, "111111:" + path);
         if (!PPermissionUtils.hasCameraPermissions(activity) || listener == null) {
             return;
         }
 
         final Uri imageUri = PickerFileProvider.getUriForFile(activity, new File(path));
+        Log.d(TAG, "222222:" + imageUri.toString());
         Intent photoIntent = getTakePhotoIntent(activity, imageUri);
         if (photoIntent.resolveActivity(activity.getPackageManager()) == null) {
             return;
@@ -61,10 +67,13 @@ public class CameraCompat {
                 UriPathInfo uriPathInfo;
                 if (isCopyInDCIM) {
                     uriPathInfo = PBitmapUtils.copyFileToDCIM(activity, path, imageName, MimeType.JPEG);
+                    Log.d(TAG, "333333:" + uriPathInfo.absolutePath);
                     PSingleMediaScanner.refresh(activity, uriPathInfo.absolutePath, null);
                 } else {
                     uriPathInfo = new UriPathInfo(imageUri, path);
                 }
+
+                Log.d(TAG, "444444:" + uriPathInfo.uri.toString());
 
                 ImageItem item = new ImageItem();
                 item.path = uriPathInfo.absolutePath;
@@ -139,8 +148,9 @@ public class CameraCompat {
 
     private static Intent getTakePhotoIntent(Activity activity, Uri imageUri) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Log.d(TAG, "-----------------:" + imageUri.toString());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-
+            Log.d(TAG, "+++++++++++++++");
             if (Build.VERSION.SDK_INT < 21) {
                 List<ResolveInfo> resInfoList = activity.getPackageManager()
                         .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
