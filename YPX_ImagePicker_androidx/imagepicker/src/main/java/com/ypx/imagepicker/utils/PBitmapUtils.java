@@ -117,12 +117,17 @@ public class PBitmapUtils {
     /**
      * 获取系统相册文件路径
      */
-    public static File getDCIMDirectory() {
-        File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        if (!dcim.exists()) {
-            dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+    public static File getDCIMDirectory(Context context) {
+        if (Build.VERSION.SDK_INT >= 29) {
+            File dcim = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            return dcim;
+        } else {
+            File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            if (!dcim.exists()) {
+                dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            }
+            return dcim;
         }
-        return dcim;
     }
 
 
@@ -167,9 +172,13 @@ public class PBitmapUtils {
         contentValues.put(MediaStore.Files.FileColumns.WIDTH, bitmap.getWidth());
         contentValues.put(MediaStore.Files.FileColumns.HEIGHT, bitmap.getHeight());
         String suffix = "." + compressFormat.toString().toLowerCase();
-        String path = getDCIMDirectory().getAbsolutePath() + File.separator + fileName + suffix;
+        String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
-            contentValues.put(MediaStore.Images.Media.DATA, path);
+            if (Build.VERSION.SDK_INT >= 29) {
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
+            } else {
+                contentValues.put(MediaStore.Images.Media.DATA, path);
+            }
         } catch (Exception ignored) {
 
         }
@@ -248,9 +257,13 @@ public class PBitmapUtils {
             contentValues.put("duration", duration);
         }
         String suffix = "." + mimeType.getSuffix();
-        String path = getDCIMDirectory().getAbsolutePath() + File.separator + fileName + suffix;
+        String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
-            contentValues.put(MediaStore.Images.Media.DATA, path);
+            if (Build.VERSION.SDK_INT >= 29) {
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
+            } else {
+                contentValues.put(MediaStore.Images.Media.DATA, path);
+            }
         } catch (Exception ignored) {
 
         }
@@ -388,8 +401,14 @@ public class PBitmapUtils {
 
 
     public static Uri getImageContentUri(Context context, String path) {
+        String section;
+        if (Build.VERSION.SDK_INT >= 29) {
+            section = MediaStore.Images.Media.RELATIVE_PATH;
+        } else {
+            section = MediaStore.Images.Media.DATA;
+        }
         Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID}, MediaStore.Images.Media.DATA + "=? ",
+                new String[]{MediaStore.Images.Media._ID}, section + "=? ",
                 new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
@@ -402,8 +421,14 @@ public class PBitmapUtils {
     }
 
     public static Uri getVideoContentUri(Context context, String path) {
+        String section;
+        if (Build.VERSION.SDK_INT >= 29) {
+            section = MediaStore.Images.Media.RELATIVE_PATH;
+        } else {
+            section = MediaStore.Images.Media.DATA;
+        }
         Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID}, MediaStore.Images.Media.DATA + "=? ",
+                new String[]{MediaStore.Images.Media._ID}, section + "=? ",
                 new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
