@@ -45,8 +45,13 @@ public class CameraCompat {
         if (!PPermissionUtils.hasCameraPermissions(activity) || listener == null) {
             return;
         }
+
         final Uri imageUri = PickerFileProvider.getUriForFile(activity, new File(path));
-        PLauncher.init(activity).startActivityForResult(getTakePhotoIntent(activity, imageUri), new PLauncher.Callback() {
+        Intent photoIntent = getTakePhotoIntent(activity, imageUri);
+        if (photoIntent.resolveActivity(activity.getPackageManager()) == null) {
+            return;
+        }
+        PLauncher.init(activity).startActivityForResult(photoIntent, new PLauncher.Callback() {
             @Override
             public void onActivityResult(int resultCode, Intent data) {
                 if (resultCode != Activity.RESULT_OK || path == null || path.trim().length() == 0) {
@@ -98,7 +103,11 @@ public class CameraCompat {
         final String path = PBitmapUtils.getPickerFileDirectory(activity).getAbsolutePath() +
                 File.separator + videoName + ".mp4";
         final Uri videoUri = PickerFileProvider.getUriForFile(activity, new File(path));
-        PLauncher.init(activity).startActivityForResult(getTakeVideoIntent(activity, videoUri, maxDuration), new PLauncher.Callback() {
+        Intent videoIntent = getTakeVideoIntent(activity, videoUri, maxDuration);
+        if (videoIntent.resolveActivity(activity.getPackageManager()) == null) {
+            return;
+        }
+        PLauncher.init(activity).startActivityForResult(videoIntent, new PLauncher.Callback() {
             @Override
             public void onActivityResult(int resultCode, Intent data) {
                 if (resultCode != Activity.RESULT_OK || path == null || path.trim().length() == 0) {

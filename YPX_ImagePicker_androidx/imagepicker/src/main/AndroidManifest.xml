@@ -2,6 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ypx.imagepicker">
 
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
     <!-- 读取媒体文件 -->
     <uses-permission android:name="com.android.providers.media.MediaProvider" />
