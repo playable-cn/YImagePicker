@@ -118,16 +118,19 @@ public class PBitmapUtils {
      * 获取系统相册文件路径
      */
     public static File getDCIMDirectory(Context context) {
+        File path;
         if (Build.VERSION.SDK_INT >= 29) {
-            File dcim = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            return dcim;
-        } else {
-            File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            if (!dcim.exists()) {
-                dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            path = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (!path.exists() && !path.isDirectory()) {
+                path.mkdirs();
             }
-            return dcim;
+        } else {
+            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            if (!path.exists()) {
+                path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            }
         }
+        return path;
     }
 
 

@@ -6,7 +6,7 @@ def groupId = 'com.github.playable-cn.yimagepicker'
 //声明模块名称
 def artifactId = 'androidx'
 //要发布的版本号
-def version = '3.2.5'
+def version = '3.3.0'
 
 def localReleaseDest = "${buildDir}/release/${version}"
 
