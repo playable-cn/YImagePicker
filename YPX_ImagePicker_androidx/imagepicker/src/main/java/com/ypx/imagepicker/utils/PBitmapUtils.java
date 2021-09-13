@@ -110,13 +110,16 @@ public class PBitmapUtils {
      * @return 获取app私有目录
      */
     public static File getPickerFileDirectory(Context context) {
-        File file = new File(context.getExternalFilesDir(null), ImagePicker.DEFAULT_FILE_NAME);
-        if (!file.exists()) {
-            if (file.mkdirs()) {
-                return file;
+        File path = new File(context.getExternalFilesDir(null), ImagePicker.DEFAULT_FILE_NAME);
+        if (!path.exists() && !path.isDirectory()) {
+            Log.d(TAG, "getPickerFileDirectory:" + path);
+            if (path.mkdirs()) {
+                Log.d(TAG, "getPickerFileDirectory: OK");
+                return path;
             }
         }
-        return file;
+        Log.d(TAG, "getPickerFileDirectory: EXIST");
+        return path;
     }
 
     /**
@@ -183,7 +186,7 @@ public class PBitmapUtils {
         String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
             if (Build.VERSION.SDK_INT >= 29) {
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
             } else {
                 contentValues.put(MediaStore.Images.Media.DATA, path);
             }
@@ -268,7 +271,7 @@ public class PBitmapUtils {
         String path = getDCIMDirectory(context).getAbsolutePath() + File.separator + fileName + suffix;
         try {
             if (Build.VERSION.SDK_INT >= 29) {
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, path);
             } else {
                 contentValues.put(MediaStore.Images.Media.DATA, path);
             }
