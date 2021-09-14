@@ -62,7 +62,7 @@ public class CameraCompat {
                     return;
                 }
                 UriPathInfo uriPathInfo;
-                if (isCopyInDCIM && Build.VERSION.SDK_INT < 29) {
+                if (isCopyInDCIM) {
                     uriPathInfo = PBitmapUtils.copyFileToDCIM(activity, path, imageName, MimeType.JPEG);
                     PSingleMediaScanner.refresh(activity, uriPathInfo.absolutePath, null);
                 } else {
@@ -118,7 +118,7 @@ public class CameraCompat {
                     return;
                 }
                 UriPathInfo uriPathInfo;
-                if (isCopyInDCIM && Build.VERSION.SDK_INT < 29) {
+                if (isCopyInDCIM) {
                     uriPathInfo = PBitmapUtils.copyFileToDCIM(activity, path, videoName, MimeType.MP4);
                     PSingleMediaScanner.refresh(activity, uriPathInfo.absolutePath, null);
                 } else {
