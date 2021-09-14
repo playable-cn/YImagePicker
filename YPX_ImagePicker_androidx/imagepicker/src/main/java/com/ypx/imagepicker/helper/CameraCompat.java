@@ -46,13 +46,10 @@ public class CameraCompat {
                                  final OnImagePickCompleteListener listener) {
         final String path = PBitmapUtils.getPickerFileDirectory(activity).getAbsolutePath() +
                 File.separator + imageName + ".jpg";
-        Log.d(TAG, "111111:" + path);
         if (!PPermissionUtils.hasCameraPermissions(activity) || listener == null) {
             return;
         }
-
         final Uri imageUri = PickerFileProvider.getUriForFile(activity, new File(path));
-        Log.d(TAG, "222222:" + imageUri.toString());
         Intent photoIntent = getTakePhotoIntent(activity, imageUri);
         if (photoIntent.resolveActivity(activity.getPackageManager()) == null) {
             return;
@@ -65,15 +62,12 @@ public class CameraCompat {
                     return;
                 }
                 UriPathInfo uriPathInfo;
-                if (isCopyInDCIM) {
+                if (isCopyInDCIM && Build.VERSION.SDK_INT < 29) {
                     uriPathInfo = PBitmapUtils.copyFileToDCIM(activity, path, imageName, MimeType.JPEG);
-                    Log.d(TAG, "333333:" + uriPathInfo.absolutePath);
                     PSingleMediaScanner.refresh(activity, uriPathInfo.absolutePath, null);
                 } else {
                     uriPathInfo = new UriPathInfo(imageUri, path);
                 }
-
-                Log.d(TAG, "444444:" + uriPathInfo.uri.toString());
 
                 ImageItem item = new ImageItem();
                 item.path = uriPathInfo.absolutePath;
@@ -124,7 +118,7 @@ public class CameraCompat {
                     return;
                 }
                 UriPathInfo uriPathInfo;
-                if (isCopyInDCIM) {
+                if (isCopyInDCIM && Build.VERSION.SDK_INT < 29) {
                     uriPathInfo = PBitmapUtils.copyFileToDCIM(activity, path, videoName, MimeType.MP4);
                     PSingleMediaScanner.refresh(activity, uriPathInfo.absolutePath, null);
                 } else {
@@ -148,9 +142,7 @@ public class CameraCompat {
 
     private static Intent getTakePhotoIntent(Activity activity, Uri imageUri) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        Log.d(TAG, "-----------------:" + imageUri.toString());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Log.d(TAG, "+++++++++++++++");
             if (Build.VERSION.SDK_INT < 21) {
                 List<ResolveInfo> resInfoList = activity.getPackageManager()
                         .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
